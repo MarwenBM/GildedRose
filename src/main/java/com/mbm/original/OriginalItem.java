@@ -1,11 +1,11 @@
 package com.mbm.original;
 
-public class Item {
+public class OriginalItem {
     public String name;
 	public int sellIn; 
     public int quality; 
     
-    public Item(String name, int sellIn, int quality) {
+    public OriginalItem(String name, int sellIn, int quality) {
 		this.setName(name);
 		this.setSellIn(sellIn);
 		this.setQuality(quality);
