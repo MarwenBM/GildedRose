@@ -17,66 +17,25 @@ public class GildedRose {
 
         System.out.println("OMGHAI!");
 
-        List<Item> items = new ArrayList<Item>();
-        items.add(new Item("+5 Dexterity Vest", 10, 20));
-        items.add(new Item(AGED_BRIE, 2, 0));
-        items.add(new Item("Elixir of the Mongoose", 5, 7));
-        items.add(new Item(SULFURAS, 0, 80));
-        items.add(new Item(BACKSTAGE_PASSES, 15, 20));
-        items.add(new Item("Conjured Mana Cake", 3, 6));
+        List<AbstractItem> items = new ArrayList<AbstractItem>();
+        items.add(new StandardItem("+5 Dexterity Vest", 10, 20));
+        items.add(new AgedBrieItem(AGED_BRIE, 2, 0));
+        items.add(new StandardItem("Elixir of the Mongoose", 5, 7));
+        items.add(new SulfurasItem(SULFURAS, 0, 80));
+        items.add(new BackStageItem(BACKSTAGE_PASSES, 15, 20));
+        items.add(new StandardItem("Conjured Mana Cake", 3, 6));
 
         updateQuality(items);
     }
 
 
-    public static void updateQuality(List<Item> items) {
-        for (Item item : items) {
-            String itemName = item.getName();
-            if (AGED_BRIE.equals(itemName)) {
-                if (item.hasNotMaxQuality()) {
-                    item.increaseQuality();
-                }
-                item.decreaseSellIn();
-                if (item.hasNotMaxQuality() && item.isExpired()) {
-                    item.increaseQuality();
-                }
-
-            } else if (BACKSTAGE_PASSES.equals(itemName)) {
-                updateQualityForBackStage(item);
-                item.decreaseSellIn();
-                if (item.isExpired()) {
-                    item.setQuality(0);
-                }
-
-            } else if (!SULFURAS.equals(itemName)) {
-                if (item.getQuality() > 0) {
-                    item.decreaseQuality();
-                }
-                item.decreaseSellIn();
-                if (item.isExpired() && item.getQuality() > 0) {
-                    item.decreaseQuality();
-                }
-            }
-
+    public static void updateQuality(List<AbstractItem> items) {
+        for (AbstractItem item : items) {
+            item.updateQuality();
         }
     }
 
-    private static void updateQualityForBackStage(Item item) {
-        if (item.hasNotMaxQuality()) {
-            item.increaseQuality();
 
-            if (item.getSellIn() < 11) {
-                if (item.hasNotMaxQuality()) {
-                    item.increaseQuality();
-                }
-            }
-            if (item.getSellIn() < 6) {
-                if (item.hasNotMaxQuality()) {
-                    item.increaseQuality();
-                }
-            }
 
-        }
-    }
 
 }

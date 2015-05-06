@@ -1,15 +1,20 @@
 package com.mbm.mySolution;
 
-public class Item {
+/**
+ * Created by marwen on 06/05/15.
+ */
+public abstract class AbstractItem {
     public String name;
     public int sellIn;
     public int quality;
 
-    public Item(String name, int sellIn, int quality) {
-        this.setName(name);
-        this.setSellIn(sellIn);
-        this.setQuality(quality);
+    public AbstractItem(String name, int sellIn, int quality) {
+        this.name = name;
+        this.sellIn = sellIn;
+        this.quality = quality;
     }
+
+    abstract void updateQuality();
 
     boolean isExpired() {
         return getSellIn() < 0;
@@ -58,7 +63,7 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
+        return "StandardItem{" +
                 "name='" + name + '\'' +
                 ", sellIn=" + sellIn +
                 ", quality=" + quality +

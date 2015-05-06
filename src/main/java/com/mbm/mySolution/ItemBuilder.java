@@ -1,5 +1,7 @@
 package com.mbm.mySolution;
 
+import static com.mbm.mySolution.TypeItem.AgedBrieItem;
+
 /**
  * Created by marwen on 05/05/15.
  */
@@ -27,7 +29,19 @@ public class ItemBuilder {
         return this;
     }
 
-    public Item build() {
-        return new Item(name, sellIn, quality);
+    public AbstractItem build(TypeItem type) {
+        AbstractItem item = null;
+        switch (type) {
+
+            case StandardIem:item = new StandardItem(name, sellIn, quality);
+                break;
+            case AgedBrieItem:item = new AgedBrieItem (name, sellIn, quality);
+                break;
+            case BackStageItem:item = new BackStageItem (name, sellIn, quality);
+                break;
+            case SulfurasIem:item = new SulfurasItem (name, sellIn, quality);
+                break;
+        }
+        return  item;
     }
 }
