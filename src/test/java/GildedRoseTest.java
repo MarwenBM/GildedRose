@@ -1,5 +1,7 @@
+import com.mbm.mySolution.AbstractItem;
 import com.mbm.mySolution.GildedRose;
-import com.mbm.mySolution.Item;
+import com.mbm.mySolution.StandardItem;
+import com.mbm.mySolution.TypeItem;
 import org.approvaltests.Approvals;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,7 +23,7 @@ public class GildedRoseTest {
 	private static final int NUMBER_OF_RANDOM_ITEMS = 2000;
 	private static final int MINIMUM = -50;
 	private static final int MAXIMUN = 101;
-	private List<Item> items;
+	private List<AbstractItem> items;
 	private String[] itemNames = {"+5 Dexterity Vest",
 			"Aged Brie",
 			"Elixir of the Mongoose",
@@ -33,12 +35,13 @@ public class GildedRoseTest {
 
 	@Before
 	public void initialise() {
-		this.items = new ArrayList<Item>();
+		this.items = new ArrayList<AbstractItem>();
 	}
 
 	@Test
 	public void shouldLowerTheSellInValue() {
-		Item dexterityVest = anItem().withName(itemNames[0]).withSellIn(10).build();
+		AbstractItem dexterityVest;
+		dexterityVest = anItem().withName(itemNames[0]).withSellIn(10).build(TypeItem.StandardIem);
 		items.add(dexterityVest);
 		GildedRose.updateQuality(items);
 		assertThat(dexterityVest.getSellIn(), is(9));
@@ -47,7 +50,7 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldLowerTheQualityValue() {
-		Item dexterityVest = anItem().withName(itemNames[0]).withQualily(10).build();
+		AbstractItem dexterityVest = anItem().withName(itemNames[0]).withQualily(10).build(TypeItem.StandardIem);
 		items.add(dexterityVest);
 		GildedRose.updateQuality(items);
 		assertThat(dexterityVest.getQuality(), is(9));
@@ -56,10 +59,10 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldLowerTheQualityValueTwiceAsFastWhenSellByDateHasPassed() {
-		Item dexterityVest = anItem()
+		AbstractItem dexterityVest = anItem()
 				.withName(itemNames[0])
 				.withQualily(10)
-				.withSellIn(EXPIRED).build();
+				.withSellIn(EXPIRED).build(TypeItem.StandardIem);
 		items.add(dexterityVest);
 		GildedRose.updateQuality(items);
 		assertThat(dexterityVest.getQuality(), is(8));
@@ -68,7 +71,7 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldNeverLowerTheQualityToANegativeValue() {
-		Item dexterityVest = anItem().withName(itemNames[0]).withQualily(0).build();
+		AbstractItem dexterityVest = anItem().withName(itemNames[0]).withQualily(0).build(TypeItem.StandardIem);
 		items.add(dexterityVest);
 		GildedRose.updateQuality(items);
 		assertThat(dexterityVest.getQuality(), is(0));
@@ -77,7 +80,7 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldIncreaseAgedBrieWheverItGetsOlder() {
-		Item agedBrie = anItem().withName(itemNames[1]).withQualily(10).build();
+		AbstractItem agedBrie = anItem().withName(itemNames[1]).withQualily(10).build(TypeItem.AgedBrieItem);
 		items.add(agedBrie);
 		GildedRose.updateQuality(items);
 		assertThat(agedBrie.getQuality(), is(11));
@@ -86,7 +89,7 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldNeverIncreaseTheQualityOfAItemToMoreThanFifty() {
-		Item agedBrie = anItem().withName(itemNames[1]).withQualily(50).build();
+		AbstractItem agedBrie = anItem().withName(itemNames[1]).withQualily(50).build(TypeItem.AgedBrieItem);
 		items.add(agedBrie);
 		GildedRose.updateQuality(items);
 		assertThat(agedBrie.getQuality(), is(50));
@@ -95,10 +98,10 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldNeverChangeSellInAndQualityOfSulfuras() {
-		Item sulfuras = anItem()
+		AbstractItem sulfuras = anItem()
 				.withName(itemNames[3])
 				.withQualily(20)
-				.withSellIn(10).build();
+				.withSellIn(10).build(TypeItem.SulfurasIem);
 		items.add(sulfuras);
 		GildedRose.updateQuality(items);
 		assertThat(sulfuras.getQuality(), is(20));
@@ -108,10 +111,10 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldIncreaseQualityByTwoOfBackstageWhenNeedsToBeSoldInTenDays() {
-		Item backstage = anItem()
+		AbstractItem backstage = anItem()
 				.withName(itemNames[4])
 				.withQualily(20)
-				.withSellIn(10).build();
+				.withSellIn(10).build(TypeItem.BackStageItem);
 		items.add(backstage);
 		GildedRose.updateQuality(items);
 		assertThat(backstage.getQuality(), is(22));
@@ -120,10 +123,10 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldIncreaseQualityByThreeOfBackstageWhenNeedsToBeSoldInLessThanSixDays() {
-		Item backstage = anItem()
+		AbstractItem backstage = anItem()
 				.withName(itemNames[4])
 				.withQualily(20)
-				.withSellIn(5).build();
+				.withSellIn(5).build(TypeItem.BackStageItem);
 		items.add(backstage);
 		GildedRose.updateQuality(items);
 		assertThat(backstage.getQuality(), is(23));
@@ -132,10 +135,10 @@ public class GildedRoseTest {
 	@Test
 	public void
 	shouldSetQualityToZeroForBackstageAfterConcert() {
-		Item backstage = anItem()
+		AbstractItem backstage = anItem()
 				.withName(itemNames[4])
 				.withQualily(20)
-				.withSellIn(0).build();
+				.withSellIn(0).build(TypeItem.BackStageItem);
 		items.add(backstage);
 		GildedRose.updateQuality(items);
 		assertThat(backstage.getQuality(), is(0));
@@ -154,10 +157,10 @@ public class GildedRoseTest {
 
 	private void generateRandomItems(int totalNumberOfRandomItems) {
 		for (int cnt = 0; cnt < totalNumberOfRandomItems; cnt++) {
-			Item randomItem = anItem()
-					.withName(randomItemName())
+			AbstractItem randomItem = anItem()
 					.withSellIn(randomSellIn())
-					.withQualily(randomQuality()).build();
+					.withName(randomItemType().name())
+					.withQualily(randomQuality()).build(randomItemType());
 			items.add(randomItem);
 		}
 	}
@@ -165,6 +168,12 @@ public class GildedRoseTest {
 	private String randomItemName() {
 		return itemNames[random.nextInt(itemNames.length)];
 	}
+
+	private TypeItem randomItemType() {
+		int pick = random.nextInt(TypeItem.values().length);
+		return TypeItem.values()[pick];
+	}
+
 
 	private int randomSellIn() {
 		return randomNumberBetween(MINIMUM, MAXIMUN);
@@ -178,9 +187,9 @@ public class GildedRoseTest {
 		return minimum + random.nextInt(maximum);
 	}
 
-	private String getStringRepresentationFor(List<Item> items) {
+	private String getStringRepresentationFor(List<AbstractItem> items) {
 		StringBuilder builder = new StringBuilder();
-		for (Item item : items) {
+		for (AbstractItem item : items) {
 			builder.append(item).append("\r");
 		}
 		return builder.toString();
